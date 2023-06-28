@@ -22,14 +22,36 @@ router.post("/signupPage", (req, res, next) => {
 
   const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
   if (!passwordRegex.test(password)) {
-    res
-      .status(400)
-      .json({
-        message:
-          "Password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.",
-      });
+    res.status(400).json({
+      message:
+        "Password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.",
+    });
     return;
   }
+
+  User.findOne({ email })
+    .then((foundUser) => {
+      if (foundUser) {
+        res.status(400).json({ message: "User already exists." });
+        return;
+      }
+
+      const salt = bcrypt.genSaltSync(saltRounds);
+      const hashedPassword = bcrypt.hashSync(password, salt);
+
+      return User.create({ email, password: hashedPassword });
+    })
+    .then((createdUser) => {
+      const { email, _id } = createdUser;
+
+      const user = { email, _id };
+
+      res.status(201).json({ user: user });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ message: "Internal Server Error" });
+    });
 });
 
 module.exports = router;
