@@ -10,7 +10,7 @@ const saltRounds = 10;
 // Signup Route - create new User
 
 router.post("/signupPage", (req, res, next) => {
-  const { email, password, name } = req.body;
+  const { email, password, name, isAgent } = req.body;
 
   if (email === "" || password === "" || name === "") {
     res.status(400).json({ message: "Provide email and Password" });
@@ -42,12 +42,12 @@ router.post("/signupPage", (req, res, next) => {
       const salt = bcrypt.genSaltSync(saltRounds);
       const hashedPassword = bcrypt.hashSync(password, salt);
 
-      return User.create({ email, password: hashedPassword, name });
+      return User.create({ email, password: hashedPassword, name, isAgent });
     })
     .then((createdUser) => {
-      const { email, name, _id } = createdUser;
+      const { email, name, _id, isAgent } = createdUser;
 
-      const user = { email, name, _id };
+      const user = { email, name, _id, isAgent };
 
       res.status(201).json({ user: user });
     })
