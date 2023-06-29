@@ -10,9 +10,9 @@ const saltRounds = 10;
 // Signup Route - create new User
 
 router.post("/signupPage", (req, res, next) => {
-  const { email, password } = req.body;
+  const { email, password, name } = req.body;
 
-  if (email === "" || password === "") {
+  if (email === "" || password === "" || name === "") {
     res.status(400).json({ message: "Provide email and Password" });
     return;
   }
@@ -42,12 +42,12 @@ router.post("/signupPage", (req, res, next) => {
       const salt = bcrypt.genSaltSync(saltRounds);
       const hashedPassword = bcrypt.hashSync(password, salt);
 
-      return User.create({ email, password: hashedPassword });
+      return User.create({ email, password: hashedPassword, name });
     })
     .then((createdUser) => {
-      const { email, _id } = createdUser;
+      const { email, name, _id } = createdUser;
 
-      const user = { email, _id };
+      const user = { email, name, _id };
 
       res.status(201).json({ user: user });
     })
@@ -60,7 +60,7 @@ router.post("/signupPage", (req, res, next) => {
 // Login Route - verifies email and password and returns a JWT
 
 router.post("/loginPage", (req, res, next) => {
-  const { email, password } = req.body;
+  const { email, password, name } = req.body;
 
   if (email === "" || password === "") {
     res.status(400).json({ message: "Provide email and Password" });
@@ -77,9 +77,9 @@ router.post("/loginPage", (req, res, next) => {
       const passwordCorrect = bcrypt.compareSync(password, foundUser.password);
 
       if (passwordCorrect) {
-        const { _id, email } = foundUser;
+        const { _id, email, name } = foundUser;
 
-        const payload = { _id, email };
+        const payload = { _id, email, name };
 
         const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
           algorithm: "HS256",
