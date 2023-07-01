@@ -60,7 +60,7 @@ router.post("/signupPage", (req, res, next) => {
 // Login Route - verifies email and password and returns a JWT
 
 router.post("/loginPage", (req, res, next) => {
-  const { email, password, name } = req.body;
+  const { email, password, name, isAgent } = req.body;
 
   if (email === "" || password === "") {
     res.status(400).json({ message: "Provide email and Password" });
@@ -77,9 +77,9 @@ router.post("/loginPage", (req, res, next) => {
       const passwordCorrect = bcrypt.compareSync(password, foundUser.password);
 
       if (passwordCorrect) {
-        const { _id, email, name } = foundUser;
+        const { _id, email, name, isAgent } = foundUser;
 
-        const payload = { _id, email, name };
+        const payload = { _id, email, name, isAgent };
 
         const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
           algorithm: "HS256",
