@@ -60,7 +60,7 @@ router.post("/signupPage", (req, res, next) => {
 // Login Route - verifies email and password and returns a JWT
 
 router.post("/loginPage", (req, res, next) => {
-  const { email, password, name, isAgent } = req.body;
+  const { email, password } = req.body;
 
   if (email === "" || password === "") {
     res.status(400).json({ message: "Provide email and Password" });
