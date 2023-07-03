@@ -9,7 +9,7 @@ const saltRounds = 10;
 
 // Signup Route - create new User
 
-router.post("/signupPage", (req, res, next) => {
+router.post("/signup", (req, res, next) => {
   const { email, password, name, isAgent } = req.body;
 
   if (email === "" || password === "" || name === "") {
@@ -59,7 +59,7 @@ router.post("/signupPage", (req, res, next) => {
 
 // Login Route - verifies email and password and returns a JWT
 
-router.post("/loginPage", (req, res, next) => {
+router.post("/login", (req, res, next) => {
   const { email, password } = req.body;
 
   if (email === "" || password === "") {
