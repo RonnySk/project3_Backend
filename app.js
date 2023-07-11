@@ -21,6 +21,9 @@ app.use("/api", indexRoutes);
 const authRouter = require("./routes/auth.routes");
 app.use("/auth", authRouter);
 
+const houseRouter = require("./routes/house.routes");
+app.use("/house", houseRouter);
+
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app);
 
