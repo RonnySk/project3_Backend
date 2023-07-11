@@ -45,12 +45,17 @@ const houseSchema = new Schema(
       type: String,
       required: true,
     },
+
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   {
     timestamps: true,
   }
 );
 
-const User = model("User", userSchema);
+const House = model("House", houseSchema);
 
-module.exports = User;
+module.exports = House;
