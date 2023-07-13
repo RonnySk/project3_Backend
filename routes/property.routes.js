@@ -15,4 +15,18 @@ router.post("/addProperty", async (req, res, next) => {
   }
 });
 
+// get one Property by ID route
+
+router.get("/property/:property_id", async (req, res, next) => {
+  try {
+    const { propertyId } = req.params;
+
+    const oneProperty = await Property.findById(propertyId);
+
+    res.status(201).json({ oneProperty });
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;
