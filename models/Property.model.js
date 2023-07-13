@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const houseSchema = new Schema(
+const propertySchema = new Schema(
   {
     title: {
       type: String,
@@ -50,12 +50,16 @@ const houseSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+
+    ImgUrl: {
+      type: String,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-const House = model("House", houseSchema);
+const Property = model("Property", propertySchema);
 
-module.exports = House;
+module.exports = Property;
