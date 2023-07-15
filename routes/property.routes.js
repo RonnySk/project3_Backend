@@ -15,13 +15,25 @@ router.post("/addProperty", async (req, res, next) => {
   }
 });
 
+// get all properties route
+
+router.get("/allproperties", async (req, res, next) => {
+  try {
+    const allProperty = await Property.find();
+
+    res.status(201).json({ allProperty });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // get one Property by ID route
 
-router.get("/property/:property_id", async (req, res, next) => {
+router.get("/oneproperty/:property_id", async (req, res, next) => {
   try {
-    const { propertyId } = req.params;
-
-    const oneProperty = await Property.findById(propertyId);
+    const { property_id } = req.params;
+    console.log("property_id", property_id);
+    const oneProperty = await Property.findById(property_id);
 
     res.status(201).json({ oneProperty });
   } catch (err) {
