@@ -41,4 +41,18 @@ router.get("/oneproperty/:property_id", async (req, res, next) => {
   }
 });
 
+// get Real Estate all properties route
+
+router.get("/realestateallproperties/:agent_id", async (req, res, next) => {
+  try {
+    const { agent_id } = req.params;
+
+    const realEstateAllProperties = await Property.find({ userId: agent_id });
+
+    res.status(201).json({ realEstateAllProperties });
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;
