@@ -49,7 +49,7 @@ router.get("/realestateallproperties/:agent_id", async (req, res, next) => {
 
     const realEstateAllProperties = await Property.find({ userId: agent_id });
 
-    res.status(201).json({ realEstateAllProperties });
+    res.status(201).json(realEstateAllProperties);
   } catch (err) {
     next(err);
   }
