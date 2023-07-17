@@ -55,4 +55,22 @@ router.get("/realestateallproperties/:agent_id", async (req, res, next) => {
   }
 });
 
+// Delete properties route
+
+router.delete("/:property_id", async (req, res, next) => {
+  try {
+    const { property_id } = req.params;
+
+    await Property.findByIdAndRemove(property_id);
+
+    res
+      .status(201)
+      .json({
+        message: `Project with ${property_id} is removed successfully.`,
+      });
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;
