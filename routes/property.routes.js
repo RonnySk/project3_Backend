@@ -1,19 +1,81 @@
 const express = require("express");
 const Property = require("../models/Property.model");
 const router = express.Router();
+require("dotenv").config();
+const cloudinary = require("cloudinary").v2;
+const cors = require("cors");
+const Multer = require("multer");
+
+//upload img route
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+});
+async function handleUpload(file) {
+  const res = await cloudinary.uploader.upload(file, {
+    resource_type: "auto",
+  });
+  return res;
+}
+
+const storage = new Multer.memoryStorage();
+const upload = Multer({
+  storage,
+});
+
+router.post("/upload", upload.single("my_file"), async (req, res) => {
+  try {
+    const b64 = Buffer.from(req.file.buffer).toString("base64");
+    let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+    const cldRes = await handleUpload(dataURI);
+
+    console.log("uploaded img", cldRes);
+
+    res.json(cldRes);
+  } catch (error) {
+    console.log(error);
+    res.send({
+      message: error.message,
+    });
+  }
+});
 
 // create add new Property route
 
-router.post("/addProperty", async (req, res, next) => {
-  try {
-    const newProperty = await Property.create(req.body);
-    console.log("add new propertie", newProperty);
+router.post(
+  "/addProperty",
+  upload.single("my_file"),
+  async (req, res, next) => {
+    try {
+      console.log("req.body", req.body);
 
-    res.status(201).json({ newProperty });
-  } catch (err) {
-    next(err);
+      // const {
+      //   title,
+      //   street,
+      //   propertyNumber,
+      //   price,
+      //   type,
+      //   size,
+      //   room,
+      //   bathroom,
+      //   year,
+      //   garage,
+      //   description,
+      //   userId,
+      //   imgUrl,
+      // } = req.body;
+
+      const newProperty = await Property.create(req.body);
+      console.log("add new propertie", newProperty);
+
+      res.status(201).json({ newProperty });
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 // get all properties route
 
@@ -63,11 +125,9 @@ router.delete("/:property_id", async (req, res, next) => {
 
     await Property.findByIdAndRemove(property_id);
 
-    res
-      .status(201)
-      .json({
-        message: `Project with ${property_id} is removed successfully.`,
-      });
+    res.status(201).json({
+      message: `Project with ${property_id} is removed successfully.`,
+    });
   } catch (err) {
     next(err);
   }

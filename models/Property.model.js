@@ -51,7 +51,7 @@ const propertySchema = new Schema(
       ref: "User",
     },
 
-    ImgUrl: {
+    imgUrl: {
       type: String,
     },
   },
