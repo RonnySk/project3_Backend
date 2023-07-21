@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const HousingProfile = require("../models/HousingProfile.model");
 const { Configuration, OpenAIApi } = require("openai");
+
 router.get("/", (req, res, next) => {
   res.json("All good in here");
 });
@@ -30,7 +31,10 @@ router.post("/chatbot", async (req, res) => {
     const chatResponse = await openai.createChatCompletion({
       model: "gpt-4-0314",
       messages: [
-        { role: "system", content: "You are consultant for people buying houses." },
+        {
+          role: "system",
+          content: "You are consultant for people buying houses.",
+        },
         { role: "user", content: userMessage },
       ],
     });

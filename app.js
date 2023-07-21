@@ -24,6 +24,9 @@ app.use("/auth", authRouter);
 const propertyRouter = require("./routes/property.routes");
 app.use("/property", propertyRouter);
 
+const messengerRouter = require("./routes/messenger.route");
+app.use("/messenger", messengerRouter);
+
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app);
 
