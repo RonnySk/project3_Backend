@@ -20,39 +20,66 @@ router.post("/createmessenger", (req, res, next) => {
 
 // create Message
 
-router.post("/message", (req, res, next) => {
-  const { sender, message, messengerId } = req.body;
+router.post("/message", async (req, res, next) => {
+  try {
+    const { sender, message, messenger_id } = req.body;
 
-  Message.create({ sender, message, messengerId })
-    .then((newMessage) => {
-      console.log("### new message created in db: ", newMessage);
-      Message.findByIdAndUpdate(
-        { _id: messengerId },
-        {
-          $push: { messages: newMessage.message },
-        },
-        {
-          new: true,
-        }
-      );
-      res.status(201).json(newMessage);
-    })
-    .catch((err) => {
-      res.status(500).json(err);
+    const createMessage = await Message.create({ sender, message });
+    console.log("createMessage", createMessage);
+    const updateMessenger = await Messenger.findByIdAndUpdate(
+      messenger_id,
+      {
+        $push: { messages: createMessage._id },
+      },
+      {
+        new: true,
+      }
+    ).populate({
+      path: "messages",
+      populate: { path: "sender" },
     });
+
+    console.log("updateMessenger", updateMessenger.messages);
+    res.status(201).json(updateMessenger.messages);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
-router.get("/:messengerId", (req, res, next) => {
-  const { messengerId } = req.params;
+// get the Messenger route
 
-  Messenger.findById(messengerId)
-    .then((messenger) => {
-      console.log("messenger", messenger);
-      res.status(201).json(messenger);
-    })
-    .catch((err) => {
-      res.status(500).json(err);
+router.get("/message/:messenger_id", async (req, res, next) => {
+  try {
+    const { messenger_id } = req.params;
+
+    const oneMessenger = await Messenger.findById(messenger_id).populate({
+      path: "messages",
+      populate: { path: "sender" },
     });
+
+    console.log("messenger", oneMessenger);
+
+    res.status(201).json(oneMessenger);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// get all Inbox/Messenger
+
+router.get("/allmessenger/:user_id", async (req, res, next) => {
+  try {
+    const { user_id } = req.params;
+
+    const findAllInbox = await Messenger.find({
+      $or: [{ userId: user_id }, { realEstateId: user_id }],
+    }).populate("userId");
+
+    console.log("all messenger", findAllInbox);
+    res.status(201).json(findAllInbox);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 module.exports = router;
