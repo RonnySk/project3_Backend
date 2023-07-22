@@ -56,10 +56,12 @@ router.get("/message/:messenger_id", async (req, res, next) => {
   try {
     const { messenger_id } = req.params;
 
-    const oneMessenger = await Messenger.findById(messenger_id).populate({
-      path: "messages",
-      populate: { path: "sender" },
-    });
+    const oneMessenger = await Messenger.findById(messenger_id)
+      .populate({
+        path: "messages",
+        populate: { path: "sender" },
+      })
+      .populate("propertyId");
 
     res.status(201).json(oneMessenger);
   } catch (err) {

@@ -11,6 +11,11 @@ const propertySchema = new Schema(
       required: true,
     },
 
+    street: {
+      type: String,
+      required: true,
+    },
+
     type: {
       type: String,
       required: true,
