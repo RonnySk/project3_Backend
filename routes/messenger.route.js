@@ -75,7 +75,12 @@ router.get("/allmessenger/:user_id", async (req, res, next) => {
 
     const findAllInbox = await Messenger.find({
       $or: [{ userId: user_id }, { realEstateId: user_id }],
-    }).populate("userId");
+    })
+      .populate({
+        path: "propertyId",
+        populate: { path: "_id" },
+      })
+      .populate("userId");
 
     console.log("all messenger", findAllInbox);
     res.status(201).json(findAllInbox);
