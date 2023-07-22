@@ -5,17 +5,21 @@ const Message = require("../models/Message.model");
 
 // create messenger
 
-router.post("/createmessenger", (req, res, next) => {
-  const { userId, realEstateId, propertyId } = req.body;
+router.post("/createmessenger", async (req, res, next) => {
+  try {
+    const { userId, realEstateId, propertyId } = req.body;
 
-  Messenger.create({ userId, realEstateId, propertyId })
-    .then((chat) => {
-      console.log("chat", chat);
-      res.status(201).json(chat);
-    })
-    .catch((err) => {
-      res.status(500).json(err);
+    const createMessenger = await Messenger.create({
+      userId,
+      realEstateId,
+      propertyId,
     });
+
+    console.log("new Messenger", createMessenger);
+    res.status(201).json(createMessenger);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 // create Message
@@ -56,8 +60,6 @@ router.get("/message/:messenger_id", async (req, res, next) => {
       path: "messages",
       populate: { path: "sender" },
     });
-
-    console.log("messenger", oneMessenger);
 
     res.status(201).json(oneMessenger);
   } catch (err) {
