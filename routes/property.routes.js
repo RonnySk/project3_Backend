@@ -116,4 +116,26 @@ router.delete("/:property_id", async (req, res, next) => {
   }
 });
 
+// Update Property route
+
+router.post("/updateProperty/:property_id", async (req, res, next) => {
+  try {
+    const { property_id } = req.params;
+
+    console.log("req.body", req.body);
+    const updateProperty = await Property.findByIdAndUpdate(
+      property_id,
+      req.body,
+      {
+        new: true,
+      }
+    );
+
+    console.log("updateProperty", updateProperty);
+    res.status(201).json(updateProperty);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 module.exports = router;
