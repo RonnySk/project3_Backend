@@ -64,6 +64,7 @@ const propertySchema = new Schema(
     imgUrl: [
       {
         type: String,
+        required: true,
       },
     ],
   },
