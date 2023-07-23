@@ -16,6 +16,11 @@ const propertySchema = new Schema(
       required: true,
     },
 
+    propertyNumber: {
+      type: Number,
+      required: true,
+    },
+
     type: {
       type: String,
       required: true,

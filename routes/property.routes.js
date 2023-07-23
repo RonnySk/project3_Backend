@@ -49,24 +49,6 @@ router.post(
   upload.single("my_file"),
   async (req, res, next) => {
     try {
-      console.log("req.body", req.body);
-
-      // const {
-      //   title,
-      //   street,
-      //   propertyNumber,
-      //   price,
-      //   type,
-      //   size,
-      //   room,
-      //   bathroom,
-      //   year,
-      //   garage,
-      //   description,
-      //   userId,
-      //   imgUrl,
-      // } = req.body;
-
       const newProperty = await Property.create(req.body);
       console.log("add new propertie", newProperty);
 
@@ -94,6 +76,7 @@ router.get("/allproperties", async (req, res, next) => {
 router.get("/oneproperty/:property_id", async (req, res, next) => {
   try {
     const { property_id } = req.params;
+
     console.log("property_id", property_id);
     const oneProperty = await Property.findById(property_id);
 
