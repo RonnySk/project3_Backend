@@ -1,5 +1,6 @@
 const express = require("express");
 const Property = require("../models/Property.model");
+const Messenger = require("../models/Messenger.model");
 const router = express.Router();
 require("dotenv").config();
 const cloudinary = require("cloudinary").v2;
@@ -31,7 +32,7 @@ router.post("/upload", upload.single("my_file"), async (req, res) => {
     let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
     const cldRes = await handleUpload(dataURI);
 
-    console.log("uploaded img", cldRes);
+    // console.log("uploaded img", cldRes);
 
     res.json(cldRes);
   } catch (error) {
@@ -77,7 +78,6 @@ router.get("/oneproperty/:property_id", async (req, res, next) => {
   try {
     const { property_id } = req.params;
 
-    console.log("property_id", property_id);
     const oneProperty = await Property.findById(property_id);
 
     res.status(201).json({ oneProperty });
@@ -102,11 +102,15 @@ router.get("/realestateallproperties/:agent_id", async (req, res, next) => {
 
 // Delete properties route
 
-router.delete("/:property_id", async (req, res, next) => {
+router.delete("/oneproperty/:property_id", async (req, res, next) => {
   try {
     const { property_id } = req.params;
 
-    await Property.findByIdAndRemove(property_id);
+    const deleteProperty = await Property.findByIdAndDelete(property_id);
+
+    const deleteAllMessengers = await Messenger.findOneAndDelete({
+      propertyId: property_id,
+    });
 
     res.status(201).json({
       message: `Project with ${property_id} is removed successfully.`,
