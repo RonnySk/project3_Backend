@@ -21,6 +21,16 @@ const propertySchema = new Schema(
       required: true,
     },
 
+    city: {
+      type: String,
+      required: true,
+    },
+
+    country: {
+      type: String,
+      required: true,
+    },
+
     type: {
       type: String,
       required: true,
